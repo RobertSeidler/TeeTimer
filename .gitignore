@@ -1,0 +1,29 @@
+# Build-Ergebnisse (regenerieren sich automatisch)
+[Bb]in/
+[Oo]bj/
+
+# Visual Studio / Rider Cache
+.vs/
+.idea/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.DotSettings.user
+
+# NuGet
+*.nupkg
+packages/
+project.lock.json
+
+# Test- & Log-Ausgaben
+[Tt]est[Rr]esult*/
+[Ll]ogs/
+TeeTimer-*.log
+
+# OS-Kram
+Thumbs.db
+.DS_Store
+
+# Publizierte EXEs liegen unter bin/ (siehe oben), aber sicher ist sicher
+*.publish.xml

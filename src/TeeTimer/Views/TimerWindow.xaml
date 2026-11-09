@@ -1,0 +1,92 @@
+<ui:FluentWindow x:Class="TeeTimer.TimerWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        mc:Ignorable="d"
+        Title="Tee Timer"
+        Width="250"
+        MinWidth="250"
+        MaxWidth="250"
+        SizeToContent="Height"
+        WindowStartupLocation="Manual"
+        ResizeMode="NoResize"
+        Topmost="True"
+        Icon="/Assets/TeaTimer.ico"
+        WindowBackdropType="Mica"
+        ExtendsContentIntoTitleBar="True"
+        Loaded="OnLoaded">
+
+    <!-- Kompakt-Stile (Fensterebene, damit BasedOn korrekt aufloest) -->
+    <ui:FluentWindow.Resources>
+        <Style TargetType="ui:Button" BasedOn="{StaticResource {x:Type ui:Button}}">
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="MinHeight" Value="28"/>
+        </Style>
+    </ui:FluentWindow.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <ui:TitleBar x:Name="TitleBar" Title="Tee Timer"
+                     ShowMaximize="False" CanMaximize="False"/>
+
+        <Grid Grid.Row="1" Margin="12,2,12,12">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Fortschrittsring mit Restzeit -->
+            <Grid Grid.Row="0" Width="195" Height="195" Margin="0,2,0,0">
+                <Ellipse x:Name="RingTrack" Stroke="#FF2E2E36" StrokeThickness="9"/>
+                <Ellipse x:Name="RingProgress" Stroke="#FF6FBF73" StrokeThickness="9"
+                         RenderTransformOrigin="0.5,0.5">
+                    <Ellipse.RenderTransform>
+                        <RotateTransform Angle="-90"/>
+                    </Ellipse.RenderTransform>
+                </Ellipse>
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <TextBlock x:Name="TimeText" Text="0:00" FontSize="40" FontWeight="SemiBold"
+                               Foreground="#FFF2F2F2" HorizontalAlignment="Center"/>
+                    <TextBlock x:Name="StatusText" Text="Bereit" FontSize="11"
+                               Foreground="#FF9A9A9A" HorizontalAlignment="Center" Margin="0,2,0,0"/>
+                </StackPanel>
+            </Grid>
+
+            <!-- Name des Tees -->
+            <TextBlock x:Name="NameText" Text="" FontSize="13" FontWeight="SemiBold"
+                       Foreground="#FFCCCCCC" HorizontalAlignment="Center" Grid.Row="1"
+                       Margin="0,6,0,12"/>
+
+            <!-- Start/Pause + Reset -->
+            <Grid Grid.Row="2" Margin="0,0,0,12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="6"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <ui:Button x:Name="StartPauseBtn" Content="▶  Start" Appearance="Primary"
+                           Click="OnStartPause" HorizontalAlignment="Stretch"/>
+                <ui:Button x:Name="ResetBtn" Content="↺  Reset" Grid.Column="2"
+                           Click="OnReset" HorizontalAlignment="Stretch"/>
+            </Grid>
+
+            <!-- Quittieren (nur sichtbar, solange der Alarm läuft) -->
+            <ui:Button x:Name="AckBtn" Grid.Row="3" Content="✓  Alarm quittieren" Appearance="Danger"
+                       Click="OnAcknowledge" HorizontalAlignment="Stretch"
+                       Visibility="Collapsed"/>
+
+            <!-- Blink-Overlay bei fertigem Tee -->
+            <Border x:Name="FlashOverlay" Grid.Row="0" Grid.RowSpan="4" IsHitTestVisible="False"
+                    Background="Transparent" CornerRadius="8"/>
+        </Grid>
+    </Grid>
+</ui:FluentWindow>

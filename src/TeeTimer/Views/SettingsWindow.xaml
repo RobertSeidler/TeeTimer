@@ -1,0 +1,114 @@
+<ui:FluentWindow x:Class="TeeTimer.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        mc:Ignorable="d"
+        Title="Tee Timer"
+        Width="250"
+        MinWidth="250"
+        MaxWidth="250"
+        SizeToContent="Height"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize"
+        Icon="/Assets/TeaTimer.ico"
+        WindowBackdropType="Mica"
+        ExtendsContentIntoTitleBar="True"
+        Closing="OnClosing">
+
+    <!-- Kompakt-Stile (Fensterebene! In App-Ressourcen verliert das
+         BasedOn seine Aufloesung und die Felder werden weiss) -->
+    <ui:FluentWindow.Resources>
+        <Style TargetType="ui:TextBox" BasedOn="{StaticResource {x:Type ui:TextBox}}">
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Padding" Value="8,4"/>
+            <Setter Property="MinHeight" Value="28"/>
+            <Setter Property="ClearButtonEnabled" Value="False"/>
+        </Style>
+        <Style TargetType="ui:Button" BasedOn="{StaticResource {x:Type ui:Button}}">
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="MinHeight" Value="28"/>
+        </Style>
+        <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Padding" Value="8,3"/>
+            <Setter Property="MinHeight" Value="28"/>
+        </Style>
+    </ui:FluentWindow.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <ui:TitleBar x:Name="TitleBar" Title="Tee Timer – Einstellungen"
+                     ShowMaximize="False" CanMaximize="False"/>
+
+        <Grid Grid.Row="1" Margin="12,2,12,12">
+            <StackPanel>
+
+                <TextBlock Text="Tee-Presets" FontSize="12" FontWeight="SemiBold"
+                           Margin="0,0,0,6" HorizontalAlignment="Center"/>
+                <WrapPanel x:Name="PresetPanel"/>
+                <TextBlock TextWrapping="Wrap" TextAlignment="Center" FontSize="10"
+                           Foreground="#FF777777" Margin="0,2,0,0"
+                           Text="Klick: Timer starten  ·  Rechtsklick: Preset löschen"/>
+
+                <!-- Neues Preset anlegen -->
+                <TextBlock Text="Neuer Tee" FontSize="12" FontWeight="SemiBold" Margin="0,14,0,6"/>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="6"/>
+                        <ColumnDefinition Width="46"/>
+                        <ColumnDefinition Width="6"/>
+                        <ColumnDefinition Width="46"/>
+                        <ColumnDefinition Width="6"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <ui:TextBox x:Name="NewNameBox" PlaceholderText="Neuer Tee…"/>
+                    <ui:TextBox x:Name="NewMinBox" Grid.Column="2" Text="3" TextAlignment="Center"
+                                ToolTip="Minuten"/>
+                    <ui:TextBox x:Name="NewSecBox" Grid.Column="4" Text="0" TextAlignment="Center"
+                                ToolTip="Sekunden"/>
+                    <ui:Button x:Name="AddBtn" Grid.Column="6" Content="＋" Appearance="Secondary"
+                               Click="OnAddPreset"/>
+                </Grid>
+
+                <!-- Standard-Signalton -->
+                <TextBlock Text="Signalton" FontSize="11" Foreground="#FF9A9A9A" Margin="0,10,0,3"/>
+                <ComboBox x:Name="SoundBox" DisplayMemberPath="DisplayName"
+                          SelectionChanged="OnSoundChanged"/>
+
+                <!-- Einmal-Timer ohne Preset -->
+                <TextBlock Text="Eigener Timer" FontSize="12" FontWeight="SemiBold" Margin="0,12,0,6"/>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="46"/>
+                        <ColumnDefinition Width="6"/>
+                        <ColumnDefinition Width="46"/>
+                        <ColumnDefinition Width="6"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <ui:TextBox x:Name="CustomMinBox" Text="2" TextAlignment="Center" ToolTip="Minuten"/>
+                    <ui:TextBox x:Name="CustomSecBox" Grid.Column="2" Text="0" TextAlignment="Center"
+                                ToolTip="Sekunden"/>
+                    <ui:Button x:Name="CustomStartBtn" Grid.Column="4" Content="▶  Timer starten"
+                               Appearance="Primary" Click="OnCustomStart"/>
+                </Grid>
+
+                <!-- Laufende Timer -->
+                <TextBlock x:Name="TimersHeader" Text="Laufende Timer" FontSize="12" FontWeight="SemiBold"
+                           Margin="0,12,0,6" Visibility="Collapsed"/>
+                <WrapPanel x:Name="TimersPanel"/>
+
+                <TextBlock TextWrapping="Wrap" TextAlignment="Center" FontSize="10"
+                           Foreground="#FF777777" Margin="0,12,0,0"
+                           Text="Strg+Alt+1…9: Preset n starten  ·  Strg+Alt+T: Einstellungen  ·  Timer-Liste: Klick öffnet Fenster, Rechtsklick verwirft"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</ui:FluentWindow>
