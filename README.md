@@ -43,6 +43,36 @@ dotnet publish src/TeeTimer/TeeTimer.csproj -c Release -r win-x64 --self-contain
 > Wichtig: Immer über `dotnet publish` bauen – die `TeeTimer.exe` aus `bin\Debug`
 > ist nicht eigenständig und braucht das SDK auf dem Zielrechner.
 
+## Installer (MSI) bauen
+
+Zusätzlich zur nackten EXE gibt es einen **per-User-MSI-Installer** (WiX Toolset v6,
+kein Admin nötig): installiert nach `%LOCALAPPDATA%\TeeTimer`, legt einen
+Startmenü-Eintrag und eine Autostart-Verknüpfung an und ist sauber über
+„Apps & Features" deinstallierbar. Upgrades: einfach neuere MSI drüberinstallieren.
+
+Einmalig das WiX-Tool installieren (klassisch lizenziert, kein Account nötig):
+
+```powershell
+dotnet tool install --global wix --version 6.0.2
+```
+
+Dann bauen (publish + MSI in einem Rutsch):
+
+```powershell
+./setup/build-installer.ps1
+```
+
+**Ergebnis:** `dist\TeeTimer.msi`
+
+Installationsvarianten:
+
+| Ziel | Befehl |
+|---|---|
+| Normal (mit Autostart) | Doppelklick auf `TeeTimer.msi` |
+| Ohne Autostart | `msiexec /i TeeTimer.msi AUTOSTART=""` |
+| Silent | `msiexec /i TeeTimer.msi /qn` |
+| Deinstallieren | „Apps & Features" → Tee Timer (oder `msiexec /x TeeTimer.msi`) |
+
 ## Daten (werden lokal gespeichert)
 
 | Datei | Inhalt |
@@ -55,6 +85,9 @@ dotnet publish src/TeeTimer/TeeTimer.csproj -c Release -r win-x64 --self-contain
 ```
 TeeTimer/
 ├── TeeTimer.slnx
+├── setup/                   # WiX-Installer (MSI)
+│   ├── TeeTimer.wxs
+│   └── build-installer.ps1
 └── src/TeeTimer/
     ├── App.xaml(.cs)           # App-Start, Tray-Icon, globale Hotkeys
     ├── Views/

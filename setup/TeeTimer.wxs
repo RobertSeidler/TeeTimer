@@ -1,0 +1,70 @@
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+  <!--
+    Tee Timer - WiX Installer (per-User-MSI, kein Admin noetig)
+
+    Build: siehe build-installer.ps1
+
+    AUTOSTART=1 (Default): Autostart-Verknaeuepfung im Startordner des Benutzers.
+    Abschaltbar bei der Installation:  msiexec /i TeeTimer.msi AUTOSTART=""
+  -->
+  <Package Name="Tee Timer"
+           Manufacturer="Robert Seidler"
+           Version="1.0.0"
+           UpgradeCode="{8750DF3A-2C16-40F8-B2CF-16DB35D0B82A}"
+           Scope="perUser"
+           Language="1031"
+           Codepage="1252"
+           Compressed="yes">
+
+    <SummaryInformation Description="Tee Timer - kleiner Windows Tee-Timer mit Presets, Hotkeys und Tray-Icon" />
+
+    <MajorUpgrade DowngradeErrorMessage="Eine neuere Version von Tee Timer ist bereits installiert." />
+
+    <MediaTemplate EmbedCab="yes" />
+
+    <Property Id="AUTOSTART" Value="1" />
+
+    <!-- Installationsziel: %LOCALAPPDATA%\TeeTimer -->
+    <StandardDirectory Id="LocalAppDataFolder">
+      <Directory Id="INSTALLDIR" Name="TeeTimer" />
+    </StandardDirectory>
+
+    <StandardDirectory Id="ProgramMenuFolder" />
+    <StandardDirectory Id="StartupFolder" />
+
+    <Feature Id="Main" Title="Tee Timer" Level="1">
+      <ComponentRef Id="TeeTimerExe" />
+      <ComponentRef Id="StartMenuShortcut" />
+      <ComponentRef Id="AutostartShortcut" />
+    </Feature>
+
+    <!-- Die Anwendung selbst (Single-File-EXE aus dem publish-Ordner) -->
+    <Component Id="TeeTimerExe" Directory="INSTALLDIR" Guid="*">
+      <File Id="TeeTimerExe" Name="TeeTimer.exe" Source="TeeTimer.exe" KeyPath="yes" />
+    </Component>
+
+    <!-- Startmenue-Eintrag -->
+    <Component Id="StartMenuShortcut" Directory="ProgramMenuFolder" Guid="*">
+      <RegistryValue Root="HKCU" Key="Software\TeeTimer" Name="startmenu" Type="integer" Value="1" KeyPath="yes" />
+      <Shortcut Id="StartMenuLnk"
+                 Name="Tee Timer"
+                 Target="[INSTALLDIR]TeeTimer.exe"
+                 WorkingDirectory="INSTALLDIR"
+                 Icon="AppIcon"
+                 Advertise="no" />
+    </Component>
+
+    <!-- Autostart-Verknaeuepfung (Startordner des Benutzers) -->
+    <Component Id="AutostartShortcut" Directory="StartupFolder" Guid="*" Condition='AUTOSTART = "1"'>
+      <RegistryValue Root="HKCU" Key="Software\TeeTimer" Name="autostart" Type="integer" Value="1" KeyPath="yes" />
+      <Shortcut Id="AutostartLnk"
+                 Name="Tee Timer"
+                 Target="[INSTALLDIR]TeeTimer.exe"
+                 WorkingDirectory="INSTALLDIR"
+                 Icon="AppIcon"
+                 Advertise="no" />
+    </Component>
+
+    <Icon Id="AppIcon" SourceFile="TeaTimer.ico" />
+  </Package>
+</Wix>

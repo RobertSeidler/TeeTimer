@@ -1,6 +1,7 @@
 # Build-Ergebnisse (regenerieren sich automatisch)
 [Bb]in/
 [Oo]bj/
+dist/
 
 # Visual Studio / Rider Cache
 .vs/
